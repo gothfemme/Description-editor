@@ -1,0 +1,5 @@
+@import '../../data/globalStyles.scss';
+
+.selection {
+   @include select;
+}
