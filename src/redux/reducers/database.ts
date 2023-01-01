@@ -2,7 +2,7 @@ import { useAppSelector } from '@redux/hooks'
 import { Database, GlobalState, Perk, Stat, StatNames } from '@redux/interfaces'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { getLoginDetails } from '@utils/getLogin'
-import { cleanObject } from '@utils/removeEmptyFromObj'
+import { cleanObject } from '@icemourne/tool-box'
 import { WritableDraft } from 'immer/dist/internal'
 
 export type ButtonActions = 'uploadToLive' | 'hidden' | 'optional'

@@ -3,7 +3,7 @@ import { getManifest } from '@data/bungieManifest'
 import { apiUrls } from '@data/urls'
 import convertDescription from '@descriptionConverter/convertDescription'
 import { Database, Languages, LivePerk, Perk } from '@redux/interfaces'
-import { cleanObject } from '@utils/removeEmptyFromObj'
+import { cleanObject } from "@icemourne/tool-box";
 import _ from 'lodash'
 
 const filteredLocation = _.omit(apiUrls, ['versions', 'live', 'intermediate'])
