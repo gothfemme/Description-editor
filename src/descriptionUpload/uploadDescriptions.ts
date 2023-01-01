@@ -2,23 +2,27 @@ import { apiUrls } from '@data/urls'
 import { databaseFilter, Locations } from '@descriptionConverter/descriptionFilter'
 import { updateDatabase } from '@redux/globalSlice'
 import { store } from '@redux/store'
-import { customJsonStringify } from '@utils/customJsonStringify'
+import { customJsonStringify, cleanObject } from '@icemourne/tool-box'
 import { githubGet, githubPut } from '@utils/github'
-import { cleanObject } from '@utils/removeEmptyFromObj'
 import { sendMessage } from '@utils/sendMessage'
 import { makeNewDatabase } from './makeNewDatabase'
 
+const DATABASE_PROPERTIES = ["stat", "multiplier", "weaponTypes"];
+
 export async function uploadToIntermediate(uploadingToLive: boolean) {
    sendMessage('Attempting upload => secondary')
-   const oldDatabase = await githubGet('intermediate').then((data) => {
-      if (typeof data === 'string') {
-         return data
+   const oldDatabase = await githubGet("intermediate").then((data) => {
+      if (typeof data === "string") {
+        return data;
       }
+      const { content, sha } = data;
+
+      // raw data isn't a string
       return {
-         descriptions: JSON.parse(data.content),
-         sha: data.sha
-      }
-   })
+        descriptions: typeof content === "string" ? JSON.parse(content) : content,
+        sha,
+      };
+    });
    // if it's string then it is error message
    if (typeof oldDatabase === 'string') {
       sendMessage(oldDatabase, 'error')
@@ -975,10 +979,13 @@ export async function uploadToIntermediate(uploadingToLive: boolean) {
    // console.log(newNewDatabase)
    //!-- used to add stuff in bulk
 
-   const message = await githubPut('intermediate', {
-      content: customJsonStringify(cleanObject(newDatabase)),
-      sha: oldDatabase.sha
-   })
+   const message = await githubPut("intermediate", {
+     content: customJsonStringify(
+       cleanObject(newDatabase),
+       DATABASE_PROPERTIES
+     ),
+     sha: oldDatabase.sha,
+   });
 
    if (typeof message === 'string') {
       sendMessage(message, 'error')
@@ -996,10 +1003,16 @@ export async function uploadToLive() {
    sendMessage('Attempting upload => live')
    const oldDatabase = await githubGet('live').then((data) => {
       if (typeof data === 'string') return data
-      return {
-         descriptions: JSON.parse(data.content),
-         sha: data.sha
+      if (typeof data.content !== "string"){
+        return {
+           descriptions: data.content,
+           sha: data.sha
+        }
       }
+      return {
+        descriptions: JSON.parse(data.content),
+        sha: data.sha,
+      };   
    })
    // if it's string then it is error message
    if (typeof oldDatabase === 'string') {
@@ -1056,7 +1069,9 @@ export async function uploadToLive() {
       const version = await githubGet('versions')
       if (typeof version === 'string') return version
 
-      const oldVersion = JSON.parse(version.content)
+      const oldVersion = typeof version.content === "string" 
+        ? JSON.parse(version.content) 
+        : version.content;
       const newVersion = JSON.stringify({
          ...oldVersion,
          descriptions: Number(oldVersion.descriptions) + 0.01
@@ -1076,10 +1091,13 @@ export async function uploadToLive() {
       upload('lightGG', newShas[4])
    ])
    if (descriptionUploadStatus.every((status) => status === true)) {
-      const updatedLive = await githubPut('live', {
-         content: customJsonStringify(cleanObject(newDatabase)),
-         sha: newShas[0]
-      })
+      const updatedLive = await githubPut("live", {
+        content: customJsonStringify(
+          cleanObject(newDatabase),
+          DATABASE_PROPERTIES
+        ),
+        sha: newShas[0],
+      });
       const updatedVersion = await updateVersion()
       if (updatedLive === true && updatedVersion === true) {
          sendMessage('All uploads completed 🍕', 'success')

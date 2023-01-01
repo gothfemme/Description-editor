@@ -8,6 +8,7 @@
       "preview": "vite preview"
    },
    "dependencies": {
+      "@icemourne/tool-box": "^1.0.12",
       "@reduxjs/toolkit": "^1.8.5",
       "immer": "^9.0.15",
       "js-base64": "^3.7.2",

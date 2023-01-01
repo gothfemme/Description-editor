@@ -1,28 +1,36 @@
-import _ from 'lodash'
+import _ from "lodash";
 
-export function cleanObject<T>(dirtyObject: T): T {
-   const obj = _.cloneDeep(dirtyObject)
-   const remover = (obj: any) => {
-      for (const key in obj) {
-         // remove null undefined
-         if (obj[key] === undefined) delete obj[key]
-         if (obj[key] === null ) delete obj[key]
-         if (Number.isNaN(obj[key])) delete obj[key]
-         // remove empty strings
-         // if where is reason to remove empty strings don't remove from object with key 'text'
-         // if (typeof obj[key] === 'string' && obj[key].trim() === '') delete obj[key]
-         if (!obj[key] || typeof obj[key] !== 'object') continue
-         remover(obj[key])
-         if (Object.keys(obj[key]).length === 0) delete obj[key]
+/**
+ ** Removes null, undefined, NaN, empty (objects, arrays, maps and or sets) from object or array
+ ** Empty (...) means if any of specified in brackets is empty
+ * @param { object | Array<T> } dirtyObject Object or Array to clean
+ * @param { boolean } allowMutations Are you allow to mutate original object
+ * @returns { T } Same object or array without null, undefined, NaN, empty (objects, arrays, maps and or sets)
+ */
+export function cleanObject<T>(
+  dirtyObject: object | Array<T>,
+  allowMutations: boolean = false
+): T {
+  const obj = allowMutations ? _.cloneDeep(dirtyObject) : dirtyObject;
+  const remover = (obj: any) => {
+    for (const key in obj) {
+      // Remove null, undefined, NaN from array
+      if (Array.isArray(obj[key])) {
+        obj[key] = _.pull(obj[key], undefined, null, NaN);
       }
-      return obj
-   }
-   const nuke = (key: string, value: any) => {
-      if (Array.isArray(value)) {
-         return _.compact(value)
-      }
-      return value
-   }
-
-   return JSON.parse(JSON.stringify(remover(obj), nuke))
+      // remove null undefined
+      if (_.isNil(obj[key])) delete obj[key];
+      // Remove NaN values
+      if (Number.isNaN(obj[key])) delete obj[key];
+      // If values is not object continue
+      if (!obj[key] || typeof obj[key] !== "object") continue;
+      remover(obj[key]);
+      // Remove empty objects, arrays, maps and sets
+      if (_.isEmpty(obj[key])) delete obj[key];
+      // Deleting properties from array makes them undefined this will remove undefined values from array
+      if (Array.isArray(obj)) obj = _.pull(obj, undefined);
+    }
+    return obj;
+  };
+  return remover(obj);
 }

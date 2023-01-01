@@ -1,15 +1,33 @@
-import { Database } from "@redux/interfaces";
+// import { Database } from "@redux/interfaces";
+/**
+ ** Instead of regular stringify this one doesn't add new lines to specified arrays
+ ** Basically normal stringify would make
+ ** [
+ **   1,
+ **   2,
+ **   3
+ ** ]
+ ** This will make
+ ** [1, 2, 3]
+ */
+export function customJsonStringify(
+  object: object,
+  properties: string[],
+  spaces = 1
+) {
+  const string = JSON.stringify(object, undefined, spaces);
+  const regex = new RegExp(
+    `"${properties.join("|")}"\\s*:\\s*\\[([^]+?)\\]`,
+    "g"
+  );
 
-export function customJsonStringify(database: Database) {
-   const string = JSON.stringify(database, undefined, 1)
+  const matches = string.match(regex); // /"(stat|multiplier|weaponTypes)": \[[^]+?\]/g
+  if (matches === null) return string;
 
-   const matches = string.match(/"(stat|multiplier|weaponTypes)": \[[^]+?\]/g)
-   if (matches === null) return string
+  const newString = matches.reduce((acc, match) => {
+    acc = acc.replace(match, match.replaceAll("\n", "").replace(/  +/g, " "));
+    return acc;
+  }, string);
 
-   const newString = matches.reduce((acc, match) => {
-      acc = acc.replace(match, match.replaceAll('\n', '').replace(/  +/g, ' '))
-      return acc
-   }, string)
-
-   return newString
+  return newString;
 }
