@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: windows-2019
 
     steps:
@@ -25,8 +25,27 @@ jobs:
           npm ci
           npm run build
 
-      - name: Deploy generator 🚀
+      - name: Upload Artifacts 🔺
+        uses: actions/upload-artifact@v1
+        with:
+          name: site
+          path: build
+
+  deploy:
+    concurrency: ci-${{ github.ref }}
+    needs: [build]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Download Artifacts 🔻
+        uses: actions/download-artifact@v1
+        with:
+          name: site
+
+      - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: dist # The folder the action should deploy.
-          branch: website
+          folder: 'site'
