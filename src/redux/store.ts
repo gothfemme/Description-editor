@@ -50,7 +50,8 @@ export const store = configureStore({
       global: globalReducer
    },
    preloadedState,
-   middleware: (getDefaultMiddleware) =>
+   // any because it fails to build with GitHub actions
+   middleware: (getDefaultMiddleware: any) =>
       getDefaultMiddleware({
          thunk: true,
          serializableCheck: false,
