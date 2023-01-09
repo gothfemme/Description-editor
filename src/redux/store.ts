@@ -50,12 +50,12 @@ export const store = configureStore({
       global: globalReducer
    },
    preloadedState,
-   // middleware: (getDefaultMiddleware) =>
-   //    getDefaultMiddleware({
-   //       thunk: true,
-   //       serializableCheck: false,
-   //       immutableCheck: false
-   //    })
+   middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+         thunk: true,
+         serializableCheck: false,
+         immutableCheck: false
+      })
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
