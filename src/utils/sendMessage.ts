@@ -1,5 +1,5 @@
-import { addMessage, removeLastMessage } from "@redux/globalSlice";
-import { store } from "@redux/store";
+import { addMessage, removeLastMessage } from "src/redux/globalSlice"
+import { store } from "src/redux/store"
 
 export function sendMessage(message: string, type?: 'error' | 'success') {
    store.dispatch(addMessage({message, type}))

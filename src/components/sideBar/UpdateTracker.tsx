@@ -1,6 +1,5 @@
-import { useAppSelector } from '@redux/hooks'
-
 import styles from './UpdateTracker.module.scss'
+import { useAppSelector } from 'src/redux/hooks'
 
 export function UpdateTracker() {
    const globalState = useAppSelector((state) => state.global)

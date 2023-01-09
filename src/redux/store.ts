@@ -1,46 +1,27 @@
-import { defaultDescription } from '@data/randomData'
+import { defaultDescription, defaultPerk } from 'src/data/randomData'
+
+import { GlobalState } from './interfaces'
 import { configureStore } from '@reduxjs/toolkit'
-import { getStartUpDescriptions } from '@utils/github'
+import { fetchBungieManifest } from '@icemourne/tool-box'
+import { getStartUpDescriptions } from 'src/utils/github'
 import globalReducer from './globalSlice'
-import { Perk } from './interfaces'
 
 const { live, intermediate } = await getStartUpDescriptions()
+const { inventoryItem, stat } = await fetchBungieManifest(['inventoryItem', 'stat'])
 
-export const defaultPerk: Perk = {
-   hash: 0,
-   name: 'Default perk',
-   type: 'none',
-   lastUpload: 0,
-   uploadedBy: '',
-   editor: {
-      en: {
-         main: defaultDescription,
-         secondary: ''
-      }
-   },
-   updateTracker: {
-      stats: {
-         lastUpdate: 0,
-         updatedBy: ''
-      },
-      descriptions: {
-         en: {
-            lastUpdate: 0,
-            updatedBy: ''
-         }
-      }
-   },
-   uploadToLive: false,
-   hidden: false,
-   inLiveDatabase: false,
-   optional: false
-}
-
-const preloadedState = {
+const preloadedState: { global: GlobalState } = {
    global: {
       database: {
          ...intermediate,
-         0: defaultPerk,
+         0: {
+            ...defaultPerk,
+            editor: {
+               en: {
+                  main: defaultDescription,
+                  secondary: ''
+               }
+            }
+         }
       },
       settings: {
          currentlySelected: 0,
@@ -50,12 +31,16 @@ const preloadedState = {
          editorType: 'normal' as const,
          newPerkWindow: false,
          messages: [],
-         weaponType: 'auto rifle' as const,
+         weaponType: 'AR' as const,
          globalUploadToLive: false
       },
       originalDatabase: {
-         live: live,
-         intermediate: intermediate
+         live,
+         intermediate
+      },
+      bungie: {
+         inventoryItem,
+         stat
       }
    }
 }

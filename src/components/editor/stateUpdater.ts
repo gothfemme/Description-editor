@@ -1,7 +1,7 @@
-import { updateEditorValue } from '@redux/globalSlice'
-import { store } from '@redux/store'
 import * as monaco from 'monaco-editor'
 import { EditorInstances } from './Editor'
+import { store } from 'src/redux/store'
+import { updateEditorValue } from 'src/redux/globalSlice'
 
 export function updateStateOnEdit(editorInstances: EditorInstances) {
    // stale global state is updated only then editor type changes

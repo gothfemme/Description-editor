@@ -1,6 +1,7 @@
-import { GlobalState, PerkTypes, SettingsState, WeaponTypes } from "@redux/interfaces"
+import { PerkTypes, WeaponTypes } from "@icemourne/description-converter"
 import { PayloadAction } from "@reduxjs/toolkit"
 import { WritableDraft } from "immer/dist/internal"
+import { GlobalState, SettingsState } from "../interfaces"
 
 type State = WritableDraft<GlobalState>
 

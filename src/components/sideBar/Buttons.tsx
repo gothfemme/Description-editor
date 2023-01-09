@@ -1,21 +1,12 @@
-import { uploadToIntermediate, uploadToLive } from '@descriptionUpload/uploadDescriptions'
-import {
-   changeEditorType,
-   changePerkType,
-   removePerk,
-   resetPerk,
-   toggleHiddenPerkDisplay,
-   togglePerkStuff,
-   toggleUploadToLiveOnEdit
-} from '@redux/globalSlice'
-import { useAppDispatch, useAppSelector } from '@redux/hooks'
-import { Perk } from '@redux/interfaces'
-import { ButtonActions, getPerk } from '@redux/reducers/dataBase'
-import { cnc } from '@utils/classNameCombiner'
+import { ButtonActions, getPerk } from 'src/redux/reducers/dataBase'
+import { changeEditorType, resetPerk, toggleHiddenPerkDisplay, togglePerkStuff, toggleUploadToLiveOnEdit } from 'src/redux/globalSlice'
+import { useAppDispatch, useAppSelector } from 'src/redux/hooks'
 
-// import { uploadDescriptions } from '@utils/uploadDescriptions'
-import { useState } from 'react'
+import { IntermediatePerk } from '@icemourne/description-converter'
+import { cnc } from 'src/utils/classNameCombiner'
 import styles from './Buttons.module.scss'
+import { uploadDescriptions } from 'src/descriptionUpload/uploadDescriptions'
+import { useState } from 'react'
 
 export function MultiButton({ action }: { action: ButtonActions }) {
    const dispatch = useAppDispatch()
@@ -23,18 +14,18 @@ export function MultiButton({ action }: { action: ButtonActions }) {
 
 
    // TODO: remove this
-   const database = useAppSelector((state) => state.global.database)
+   // const database = useAppSelector((state) => state.global.database)
 
-   console.log(
-      Object.values(database).flatMap((perk_) => {
-         const perk = perk_ as Perk
+   // console.log(
+   //    Object.values(database).flatMap((perk_) => {
+   //       const perk = perk_ as IntermediatePerk
 
-         if (perk.stats?.rateOfFire) {
-            return perk.name
-         }
-         return []
-      })
-   )
+   //       if (perk.stats?.rateOfFire) {
+   //          return perk.name
+   //       }
+   //       return []
+   //    })
+   // )
 
    const labels = {
       active: {
@@ -87,9 +78,9 @@ export function ButtonChangeEditor() {
    )
 }
 
-export function ButtonUploadIce({ labelText }: { labelText: string }) {
+export function ButtonUploadLive({ labelText }: { labelText: string }) {
    return (
-      <button className={styles.button} onClick={() => uploadToLive()}>
+      <button className={styles.button} onClick={() => uploadDescriptions('live', true)}>
          {labelText}
       </button>
    )
@@ -97,28 +88,8 @@ export function ButtonUploadIce({ labelText }: { labelText: string }) {
 
 export function ButtonUploadIntermediate({ labelText }: { labelText: string }) {
    return (
-      <button className={styles.button} onClick={() => uploadToIntermediate(false)}>
+      <button className={styles.button} onClick={() => uploadDescriptions('intermediate', false)}>
          {labelText}
-      </button>
-   )
-}
-
-export function ButtonDeletePerk() {
-   const dispatch = useAppDispatch()
-   const settings = useAppSelector((state) => state.global.settings)
-   const savedPerkType = settings.selectedType
-
-   const onRemovePerk = () => {
-      dispatch(changePerkType(savedPerkType !== 'none' ? 'none' : 'armorExotic'))
-      setTimeout(() => {
-         dispatch(removePerk(settings.currentlySelected))
-         dispatch(changePerkType(savedPerkType))
-      }, 1)
-   }
-
-   return (
-      <button className={styles.button} onClick={onRemovePerk}>
-         Delete perk
       </button>
    )
 }

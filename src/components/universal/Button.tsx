@@ -1,4 +1,4 @@
-import { cnc } from '@utils/classNameCombiner'
+import { cnc } from 'src/utils/classNameCombiner'
 import styles from './Button.module.scss'
 
 export function Button({

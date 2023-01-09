@@ -29,14 +29,12 @@ export const {
 
    // database
    togglePerkStuff,
-   removePerk,
    updateEditorValue,
    addStat,
    removeStat,
    setStatImport,
    addPerk,
    resetPerk,
-   linkWithEnhanced,
    updateDatabase
 } = globalSlice.actions
 

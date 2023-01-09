@@ -1,10 +1,17 @@
-import specialAmmo from '@assets/specialAmmo.png'
-import { weaponTypes } from '@data/randomData'
-import { changePerkType, changeSelectedPerk, changeWeaponType } from '@redux/globalSlice'
-import { useAppDispatch, useAppSelector } from '@redux/hooks'
-import { WeaponTypes } from '@redux/interfaces'
-import { cnc } from '@utils/classNameCombiner'
+import {
+   IntermediatePerk,
+   PerkTypes,
+   PossiblePerkLinks,
+   WeaponTypes,
+   weaponTypes
+} from '@icemourne/description-converter'
+import { changePerkType, changeSelectedPerk, changeWeaponType } from 'src/redux/globalSlice'
+import { useAppDispatch, useAppSelector } from 'src/redux/hooks'
 import { useEffect, useState } from 'react'
+
+import _ from 'lodash'
+import { cnc } from 'src/utils/classNameCombiner'
+import specialAmmo from 'src/assets/specialAmmo.png'
 import styles from './Header.module.scss'
 
 const itemPreview = {
@@ -21,16 +28,8 @@ const itemPreview = {
       type: 'special'
    },
    power: 69420,
-   name: `FADING SHADOW'S BURDEN`
+   name: `STARDUST'S BURDEN`
 }
-
-const fixNames = (name: string) => {
-   return name
-      .match(/([A-Z][a-z]+)|([a-z]+)/g)
-      ?.map((x) => x[0].toUpperCase() + x.slice(1).toLowerCase())
-      .join(' ')
-}
-
 const WeaponSelection = () => {
    const dispatch = useAppDispatch()
    const [weaponTypeIndex, setWeaponTypeIndex] = useState<number>(0)
@@ -54,9 +53,9 @@ const WeaponSelection = () => {
          value={weaponTypes[weaponTypeIndex]}
          className={styles.type}
       >
-         {weaponTypes.map((keyword, i) => (
-            <option value={keyword} key={i}>
-               {fixNames(keyword)}
+         {weaponTypes.map((weaponType, i) => (
+            <option value={weaponType} key={i}>
+               {weaponType}
             </option>
          ))}
       </select>
@@ -69,8 +68,25 @@ export function Header() {
    const database = globalState.database
    const currentlySelectedPerk = database[globalState.settings.currentlySelected]
 
+   const possibleLinks: PossiblePerkLinks[] = [
+      'Weapon Perk Exotic',
+      'Weapon Frame Exotic',
+      'Weapon Catalyst Exotic',
+      'Weapon Perk Enhanced'
+   ]
+
    const onPerksTypeSwitch = () => {
-      const linkedPerkHash = currentlySelectedPerk.linkedWith
+      // reorders the possibleLinks array so that the currently selected perk is first in array with out changing arrays order
+      const selected = currentlySelectedPerk.type
+      if (!possibleLinks.some((p) => p === selected)) return
+      const index = possibleLinks.indexOf(selected as PossiblePerkLinks),
+         removed = possibleLinks.splice(index, 9),
+         newArr = removed.concat(possibleLinks)
+
+      const linkedPerks = currentlySelectedPerk.linkedWith
+      if (!linkedPerks) return
+      const linkedPerkHash = linkedPerks[newArr[1]] || linkedPerks[newArr[2]] || linkedPerks[newArr[3]]
+
       if (!linkedPerkHash) return
       const linkedPerk = database[linkedPerkHash]
 
@@ -95,9 +111,9 @@ export function Header() {
    )
 
    return (
-      <div className={styles.header} >
+      <div className={styles.header}>
          <a
-            className={cnc(styles.name, currentlySelectedPerk.type === 'weaponPerkEnhanced', styles.enhancedName)}
+            className={cnc(styles.name, currentlySelectedPerk.type === 'Weapon Perk Enhanced', styles.enhancedName)}
             onClick={onPerksTypeSwitch}
          >
             {itemPreview.name}

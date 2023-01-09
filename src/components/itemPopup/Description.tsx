@@ -1,8 +1,8 @@
-import { bungieStatNames } from '@data/randomData'
-import { store } from '@redux/store'
-import { useImmer } from 'use-immer'
+import { DescriptionLine, LinesContent, RowContent } from '@icemourne/description-converter'
+
+import { store } from 'src/redux/store'
 import styles from './Description.module.scss'
-import { DescriptionLine, LinesContent, RowContent } from './provider/providerInterfaces'
+import { useImmer } from 'use-immer'
 
 const calculateStat = (formula?: string) => {
    if (formula) {
@@ -34,10 +34,12 @@ const joinClassNames = (classNames: (string | null | undefined)[] | undefined) =
 }
 
 export function DescriptionBuilder({ description }: { description: DescriptionLine[] | string }): JSX.Element {
-   const globalState = store.getState().global
-   const selectedWeaponType = globalState.settings.weaponType
-   const currentlySelected = globalState.settings.currentlySelected
-   const selectedPerk = globalState.database[currentlySelected]
+   const { bungie, database, settings } = store.getState().global
+   const selectedWeaponType = settings.weaponType
+   const currentlySelected = settings.currentlySelected
+   const selectedPerk = database[currentlySelected]
+
+   const bungieStatNames = bungie.stat
 
    const [hoverPopup, setHoverPopup] = useImmer<{ [key: string]: JSX.Element }>({})
 
@@ -123,29 +125,80 @@ export function DescriptionBuilder({ description }: { description: DescriptionLi
    }
 
    const investmentStats = () => {
-      const linkedStats =
-         selectedPerk.type === 'weaponPerk' && selectedPerk.linkedWith
-            ? globalState.database[selectedPerk.linkedWith]?.investmentStats
-            : undefined
+      if (selectedPerk.type !== 'Weapon Perk' && selectedPerk.type !== 'Weapon Frame Exotic') return
+      const linkedPerks = selectedPerk.linkedWith
 
-      const normalStats = selectedPerk.investmentStats
+      const perkHash = selectedPerk.hash,
+         catalystHash = linkedPerks?.['Weapon Catalyst Exotic'],
+         frameHash = linkedPerks?.['Weapon Frame Exotic'],
+         enhancedHash = linkedPerks?.['Weapon Perk Enhanced'],
+         exoticHash = linkedPerks?.['Weapon Perk Exotic']
 
-      if (!(linkedStats || normalStats)) return
+      const perkStats = perkHash ? bungie.inventoryItem?.[perkHash]?.investmentStats : undefined,
+         catalystStats = catalystHash ? bungie.inventoryItem?.[catalystHash]?.investmentStats : undefined,
+         frameStats = frameHash ? bungie.inventoryItem?.[frameHash]?.investmentStats : undefined,
+         enhancedStats = enhancedHash ? bungie.inventoryItem?.[enhancedHash]?.investmentStats : undefined,
+         exoticStats = exoticHash ? bungie.inventoryItem?.[exoticHash]?.investmentStats : undefined
 
       return (
-         <div className={styles.investmentStats}>
-            {normalStats?.map((stat, i) => (
-               <div key={i}>
-                  {stat.value > 0 ? `+${stat.value}` : `${stat.value}`} {bungieStatNames[stat.statTypeHash]}
+         <>
+            {perkStats && perkStats.length !== 0 && (
+               <div className={styles.investmentStats}>
+                  Perk stats:
+                  {perkStats?.map((stat, i) => (
+                     <div key={i}>
+                        {stat.value > 0 ? `+${stat.value}` : `${stat.value}`}{' '}
+                        {bungieStatNames?.[stat.statTypeHash].displayProperties.name}
+                     </div>
+                  ))}
                </div>
-            ))}
-            {linkedStats?.map((stat, i) => (
-               <div key={i}>
-                  {stat.value > 0 ? `+${stat.value}` : `${stat.value}`} {bungieStatNames[stat.statTypeHash]} {'>'} Will
-                  show up on Enhanced only
+            )}
+            {catalystStats && catalystStats.length !== 0 && (
+               <div className={styles.investmentStats}>
+                  Catalyst stats:
+                  {catalystStats?.map((stat, i) => (
+                     <div key={i}>
+                        {stat.value > 0 ? `+${stat.value}` : `${stat.value}`}{' '}
+                        {bungieStatNames?.[stat.statTypeHash].displayProperties.name}
+                     </div>
+                  ))}
                </div>
-            ))}
-         </div>
+            )}
+            {frameStats && frameStats.length !== 0 && (
+               <div className={styles.investmentStats}>
+                  Frame stats:
+                  {frameStats?.map((stat, i) => (
+                     <div key={i}>
+                        {stat.value > 0 ? `+${stat.value}` : `${stat.value}`}{' '}
+                        {bungieStatNames?.[stat.statTypeHash].displayProperties.name}
+                     </div>
+                  ))}
+               </div>
+            )}
+
+            {enhancedStats && enhancedStats.length !== 0 && (
+               <div className={styles.investmentStats}>
+                  Enhanced stats:
+                  {enhancedStats?.map((stat, i) => (
+                     <div key={i}>
+                        {stat.value > 0 ? `+${stat.value}` : `${stat.value}`}{' '}
+                        {bungieStatNames?.[stat.statTypeHash].displayProperties.name}
+                     </div>
+                  ))}
+               </div>
+            )}
+            {exoticStats && exoticStats.length !== 0 && (
+               <div className={styles.investmentStats}>
+                  Exotic stats:
+                  {exoticStats?.map((stat, i) => (
+                     <div key={i}>
+                        {stat.value > 0 ? `+${stat.value}` : `${stat.value}`}{' '}
+                        {bungieStatNames?.[stat.statTypeHash].displayProperties.name}
+                     </div>
+                  ))}
+               </div>
+            )}
+         </>
       )
    }
 

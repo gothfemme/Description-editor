@@ -1,13 +1,12 @@
-import { Select } from '@components/universal/Select'
-import { changePerkType, changeSelectedPerk } from '@redux/globalSlice'
-import { useAppDispatch, useAppSelector } from '@redux/hooks'
-import { PerkTypes } from '@redux/interfaces'
-import { store } from '@redux/store'
-import { cnc } from '@utils/classNameCombiner'
+import { changePerkType, changeSelectedPerk } from 'src/redux/globalSlice'
+import { useAppDispatch, useAppSelector } from 'src/redux/hooks'
 import { useEffect, useState } from 'react'
-import { useImmer } from 'use-immer'
-
+import { PerkTypes } from '@icemourne/description-converter'
+import { Select } from '../universal/Select'
+import { cnc } from 'src/utils/classNameCombiner'
+import { store } from 'src/redux/store'
 import styles from './Selection.module.scss'
+import { useImmer } from 'use-immer'
 
 export function DescriptionTypeSelection({
    value,
@@ -21,37 +20,36 @@ export function DescriptionTypeSelection({
          <option value="none">Select description type</option>
 
          <optgroup label="Exotics">
-            <option value="armorExotic">Armor</option>
-            <option value="weaponPerkExotic">Weapon Perk</option>
-            <option value="weaponFrameExotic">Weapon Frame</option>
-            <option value="weaponCatalystExotic">Catalyst</option>
+            <option value="Armor Perk Exotic">Armor</option>
+            <option value="Weapon Perk Exotic">Weapon Perk</option>
+            <option value="Weapon Frame Exotic">Weapon Frame</option>
+            <option value="Weapon Catalyst Exotic">Catalyst</option>
          </optgroup>
 
          <optgroup label="Weapon">
-            <option value="weaponPerk">Perk</option>
-            <option value="weaponPerkEnhanced">Enhanced Perk</option>
-            <option value="weaponOriginTrait">Origin Trait</option>
-            <option value="weaponFrame">Frame</option>
+            <option value="Weapon Perk">Perk</option>
+            <option value="Weapon Perk Enhanced">Enhanced Perk</option>
+            <option value="Weapon Origin Trait">Origin Trait</option>
+            <option value="Weapon Frame">Frame</option>
          </optgroup>
 
          <optgroup label="Abilities / Subclass Options">
-            <option value="fragment">Fragment</option>
-            <option value="aspect">Aspect</option>
-            <option value="super">Super</option>
-            <option value="grenade">Grenade</option>
-            <option value="melee">Melee</option>
-            <option value="class">Class</option>
-            <option value="movement">Movement</option>
+            <option value="Subclass Fragment">Fragment</option>
+            <option value="Subclass Aspect">Aspect</option>
+            <option value="Subclass Super">Super</option>
+            <option value="Subclass Grenade">Grenade</option>
+            <option value="Subclass Melee">Melee</option>
+            <option value="Subclass Class">Class</option>
+            <option value="Subclass Movement">Movement</option>
          </optgroup>
 
          <optgroup label="Mods">
-            <option value="armorModGeneral">Armor General</option>
-            <option value="armorModCombat">Armor Combat</option>
-            <option value="armorModActivity">Armor Activity</option>
-            <option value="armorModSeasonal">Armor Seasonal</option>
-            <option value="weaponMod">Weapon</option>
-            <option value="ghostMod">Ghost</option>
-            {/* <option value="artifactMod">Artifact</option> */}
+            <option value="Armor Mod General">Armor General</option>
+            <option value="Armor Mod Combat">Armor Combat</option>
+            <option value="Armor Mod Activity">Armor Activity</option>
+            <option value="Armor Mod Seasonal">Armor Seasonal</option>
+            <option value="Weapon Mod">Weapon</option>
+            <option value="Ghost Mod">Ghost</option>
          </optgroup>
       </Select>
    )

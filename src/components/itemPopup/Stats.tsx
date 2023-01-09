@@ -1,5 +1,5 @@
-import Recoil from '@assets/svg/Recoil'
 import React from 'react'
+import Recoil from 'src/assets/svg/Recoil'
 import styles from './Stats.module.scss'
 
 export function Stats() {

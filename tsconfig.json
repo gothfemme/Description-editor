@@ -18,18 +18,6 @@
       "jsx": "react-jsx",
 
       "baseUrl": ".",
-      "paths": {
-         "@assets/*": ["src/assets/*"],
-         "@components/*": ["src/components/*"],
-         "@data/*": ["src/data/*"],
-         "@utils/*": ["src/utils/*"],
-         "@redux/*": ["src/redux/*"],
-         "@descriptionConverter/*": ["src/descriptionConverter/*"],
-         "@descriptionUpload/*": ["src/descriptionUpload/*"],
-
-         // remove ones bellow
-         "@ts/*": ["src/ts/*"],
-      }
    },
    "include": ["./src"]
 }

@@ -1,4 +1,4 @@
-import { Languages } from '@redux/interfaces'
+import { IntermediatePerk, Languages } from '@icemourne/description-converter'
 
 const specialWrappers = ['green', 'blue', 'purple', 'yellow', 'center', 'bold', 'pve', 'pvp']
 
@@ -28,41 +28,6 @@ export const wrappers = {
 
 export const selfContainedArr = [...wrappers.imageAdding, ...wrappers.lineEffecting]
 
-export const weaponTypesToNames: {[key: string]: string} = {
-   'auto rifle': 'AR',
-   'combat bow': 'Bow',
-   'fusion rifle': 'Fusion',
-   'glaive': 'Glaive',
-   'grenade launcher': 'GL',
-   'hand cannon': 'HC',
-   'heavy grenade launcher': 'Heavy GL',
-   'linear fusion rifle': 'LFR',
-   'machine gun': 'LMG',
-   'pulse rifle': 'Pulse',
-   'rocket launcher': 'Rocket',
-   'scout rifle': 'Scout',
-   'shotgun': 'Shotgun',
-   'sidearm': 'Sidearm',
-   'sniper rifle': 'Sniper',
-   'submachine gun': 'SMG',
-   'sword': 'Sword',
-   'trace rifle': 'Trace',
-
-   'super' : 'Super',
-   'grenade': 'Grenade',
-   'melee': 'Melee'
-}
-
-export const nameToWeaponTypes = Object.entries(weaponTypesToNames).reduce<{ [key: string]: string }>(
-   (acc, [weapon, name]) => {
-      acc[name] = weapon
-      return acc
-   },
-   {}
-)
-export const weaponTypes = Object.keys(weaponTypesToNames)
-export const weaponNames = Object.values(weaponTypesToNames)
-
 export const statsTypes = [
    'aimAssist',
    'airborne',
@@ -79,33 +44,6 @@ export const statsTypes = [
    'zoom'
 ] as const
 
-export const bungieStatNames = {
-   4284893193: 'Rounds Per Minute',
-   447667954: 'Draw Time',
-   2961396640: 'Charge Time',
-   2837207746: 'Swing Speed',
-   4043523819: 'Impact',
-   3614673599: 'Blast Radius',
-   1591432999: 'Accuracy',
-   2523465841: 'Velocity',
-   2762071195: 'Guard Efficiency',
-   209426660: 'Guard Resistance',
-   1240592695: 'Range',
-   1842278586: 'Shield Duration',
-   155624089: 'Stability',
-   943549884: 'Handling',
-   4188031367: 'Reload Speed',
-   1345609583: 'Aim Assistance',
-   3555269338: 'Zoom',
-   2715839340: 'Recoil Direction',
-   3022301683: 'Charge Rate',
-   3736848092: 'Guard Endurance',
-   3871231066: 'Magazine',
-   1931675084: 'Inventory Size',
-   925767036: 'Ammo Capacity',
-   2714457168: 'Airborne Effectiveness'
-} as { [key: string]: string }
-
 export const languages: [Languages, string][] = [
    ['en', 'English'],
    ['de', 'German - Deutsch'],
@@ -121,6 +59,36 @@ export const languages: [Languages, string][] = [
    ['zh-cht', 'Chinese (Traditional) - 繁體中文'],
    ['zh-chs', 'Chinese (Simplified) - 简体中文']
 ]
+
+export const defaultPerk: IntermediatePerk = {
+   hash: 0,
+   name: 'Default perk',
+   type: 'none',
+   lastUpload: 0,
+   uploadedBy: '',
+   editor: {
+      en: {
+         main: '',
+         secondary: ''
+      }
+   },
+   updateTracker: {
+      stats: {
+         lastUpdate: 0,
+         updatedBy: ''
+      },
+      descriptions: {
+         en: {
+            lastUpdate: 0,
+            updatedBy: ''
+         }
+      }
+   },
+   uploadToLive: false,
+   hidden: false,
+   inLiveDatabase: false,
+   optional: false
+}
 
 export const defaultDescription = `
 Images you can use in descriptions

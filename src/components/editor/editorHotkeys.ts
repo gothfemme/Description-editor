@@ -1,5 +1,5 @@
-import { wrappers } from '@data/randomData'
 import * as monaco from 'monaco-editor'
+import { wrappers } from 'src/data/randomData'
 
 const lineEffecting = wrappers.lineEffecting.map((className) => `(<${className}\/>)`).join('|')
 

@@ -1,7 +1,7 @@
-import { Database, Perk } from '@redux/interfaces'
-import { store } from '@redux/store'
-import { getLoginDetails } from '@utils/getLogin'
+import { Database, IntermediatePerk } from '@icemourne/description-converter'
 import _ from 'lodash'
+import { getLoginDetails } from 'src/utils/getLogin'
+import { store } from 'src/redux/store'
 
 export const makeNewDatabase = (
    saveDatabaseType: 'intermediate' | 'live',
@@ -43,7 +43,7 @@ export const makeNewDatabase = (
       }
 
 
-      acc[modifiedPerkHash] = _.transform(modifiedPerk, (acc: Perk, valueInPerk, keyInPerk) => {
+      acc[modifiedPerkHash] = _.transform(modifiedPerk, (acc: IntermediatePerk, valueInPerk, keyInPerk) => {
          // if value was deleted it will not be added to new perk
 
          // if where are no changes made return perk from live database
@@ -60,7 +60,7 @@ export const makeNewDatabase = (
          }
 
          // @ts-ignore
-         acc[keyInPerk] = _.transform(valueInPerk, (acc: Perk, value, key) => {
+         acc[keyInPerk] = _.transform(valueInPerk, (acc: IntermediatePerk, value, key) => {
             // if value was deleted it will not be added to new perk
 
             // if where are no changes made return perk info from live database

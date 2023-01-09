@@ -1,28 +1,37 @@
-import convertDescription from '@descriptionConverter/convertDescription'
-import { descriptionFilter } from '@descriptionConverter/descriptionFilter'
-import { useAppSelector } from '@redux/hooks'
-import { getPerk } from '@redux/reducers/dataBase'
-import { cnc } from '@utils/classNameCombiner'
+import { DescriptionData, descriptionConverter, descriptionFilter } from '@icemourne/description-converter'
+
 import { DescriptionBuilder } from './Description'
+import betaDimLogo from '../../assets/betaDimLogo.png'
+import clarityLogo from '../../assets/clarityLogo.png'
+import { cnc } from 'src/utils/classNameCombiner'
+import { getPerk } from 'src/redux/reducers/dataBase'
 import styles from './Perks.module.scss'
-
-import { getManifest } from '@data/bungieManifest'
-import betaDimLogo from "../../assets/betaDimLogo.png"
-import clarityLogo from "../../assets/clarityLogo.png"
-
-const bungieManifest = await getManifest()
+import { useAppSelector } from 'src/redux/hooks'
 
 export function Perks() {
-   const langue = useAppSelector((state) => state.global.settings.language)
+   const globalState = useAppSelector((state) => state.global)
+   const langue = globalState.settings.language
    const perk = getPerk()
 
-   const mainDescription = convertDescription(perk.editor[langue]?.main || '', 'main')
-   const secondaryDescription = descriptionFilter(
-      convertDescription(perk.editor[langue]?.secondary || '', 'secondary'),
-      'dim'
-   )
+   const perkIcon = globalState.bungie.inventoryItem?.[perk.hash]?.displayProperties?.icon
 
-   const perkIcon = bungieManifest[perk.hash]?.displayProperties.icon
+   const descriptionDataMain: DescriptionData = {
+      descriptionString: perk.editor[langue]?.main || '',
+      editorType: 'main',
+      language: langue,
+      hash: perk.hash,
+      database: globalState.database
+   }
+   const descriptionDataSecondary: DescriptionData = {
+      descriptionString: perk.editor[langue]?.secondary || '',
+      editorType: 'secondary',
+      language: langue,
+      hash: perk.hash,
+      database: globalState.database
+   }
+
+   const mainDescription = descriptionConverter(descriptionDataMain)
+   const secondaryDescription = descriptionFilter(descriptionConverter(descriptionDataSecondary), 'dim')
 
 
    return (

@@ -1,4 +1,4 @@
-import { cnc } from '@utils/classNameCombiner'
+import { cnc } from 'src/utils/classNameCombiner'
 import styles from './Select.module.scss'
 
 export function Select({

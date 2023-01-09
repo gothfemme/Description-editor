@@ -1,5 +1,5 @@
-import { useAppSelector } from '@redux/hooks'
 import styles from './Message.module.scss'
+import { useAppSelector } from 'src/redux/hooks'
 
 export function Message() {
    const messages = useAppSelector((state) => state.global.settings.messages)

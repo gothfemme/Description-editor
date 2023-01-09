@@ -1,8 +1,7 @@
-import { weaponNames, weaponTypes, wrappers } from '@data/randomData'
-import { extractTitles } from '@descriptionConverter/converterFunctions/extractTitles'
-import { getVariables } from '@descriptionConverter/converterFunctions/loadVariables'
-import { store } from '@redux/store'
+import { extractTitles, getVariables, weaponTypes } from '@icemourne/description-converter'
 import * as monaco from 'monaco-editor'
+import { wrappers } from 'src/data/randomData'
+import { store } from 'src/redux/store'
 import { ConditionalSuggestions } from './monacoEditor'
 
 const conditionalSuggestions: {
@@ -40,7 +39,7 @@ const conditionalSuggestions: {
       }
    ],
    weaponType: [
-      ...weaponNames.map((weapon) => ({
+      ...weaponTypes.map((weapon) => ({
          label: weapon,
          insertText: weapon,
          documentation: ''
@@ -77,12 +76,12 @@ const normalSuggestions = [
    {
       label: 'export',
       insertText: ['export ${1:unique name} (', '$0', ')'].join('\n'),
-      documentation: `Exports text inside allowing reusability of text in other descriptions\nText in other descriptions will always match exported text`,
+      documentation: `Exports text inside allowing reusability of text in other descriptions\nText in other descriptions will always match exported text`
    },
    {
       label: 'variable',
       insertText: 'var ${1:name} = ${0:value}',
-      documentation: `Variable with value specific to this perk if descriptions vas imported to other perk you can define new variable to have different value on other perk`,
+      documentation: `Variable with value specific to this perk if descriptions vas imported to other perk you can define new variable to have different value on other perk`
    },
    // ----------------------------------------------------------------
    {
@@ -110,8 +109,8 @@ const normalSuggestions = [
    {
       label: 'table',
       insertText: ['< table >', '$0', '<$>'].join('\n'),
-      documentation: `< table > optionally can have center, formula, wide ex < table wide formula >\n |\tnormal text\n |b\tbold text\n |c\tcentered text\n |r\tmoves text to right side\n |h\tadd background\n\tall of them can be combined for example\n |bc\tmakes bold centered text\n<$>`,
-   },
+      documentation: `< table > optionally can have center, formula, wide ex < table wide formula >\n |\tnormal text\n |b\tbold text\n |c\tcentered text\n |r\tmoves text to right side\n |h\tadd background\n\tall of them can be combined for example\n |bc\tmakes bold centered text\n<$>`
+   }
    // ----------------------------------------------------------------
    // {
    //    label: 'import',
@@ -187,9 +186,9 @@ export function createNormalSuggestions() {
 export function createWrapperSuggestions() {
    const withText = wrappers.textEffecting.reduce((acc, wrapper) => {
       acc.push({
-            label: `${wrapper} text`,
-            insertText: `<${wrapper} $1 />`,
-            documentation: ``,
+         label: `${wrapper} text`,
+         insertText: `<${wrapper} $1 />`,
+         documentation: ``,
          ...settings
       })
       return acc
@@ -197,9 +196,9 @@ export function createWrapperSuggestions() {
 
    const lineEffecting = wrappers.lineEffecting.reduce((acc, wrapper) => {
       acc.push({
-            label: `${wrapper} line`,
-            insertText: `<${wrapper}/>`,
-            documentation: ``,
+         label: `${wrapper} line`,
+         insertText: `<${wrapper}/>`,
+         documentation: ``,
          ...settings
       })
       return acc
@@ -207,9 +206,9 @@ export function createWrapperSuggestions() {
 
    const imageAdding = wrappers.imageAdding.reduce((acc, wrapper) => {
       acc.push({
-            label: `${wrapper} img`,
-            insertText: `<${wrapper}/>`,
-            documentation: ``,
+         label: `${wrapper} img`,
+         insertText: `<${wrapper}/>`,
+         documentation: ``,
          ...settings
       })
       return acc
@@ -231,9 +230,9 @@ export function variableSuggestions(description: string) {
 
    return Object.keys(variables).reduce((acc, variable) => {
       acc.push({
-            label: `${variable}`,
-            insertText: `${variable}`,
-            documentation: ``,
+         label: `${variable}`,
+         insertText: `${variable}`,
+         documentation: ``,
          ...settings
       })
       return acc
@@ -253,9 +252,9 @@ export function titleSuggestions(description: string) {
 
    return Object.keys(titles).reduce((acc, title) => {
       acc.push({
-            label: `${title}`,
-            insertText: `${title}`,
-            documentation: ``,
+         label: `${title}`,
+         insertText: `${title}`,
+         documentation: ``,
          ...settings
       })
       return acc

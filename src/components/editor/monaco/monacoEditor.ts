@@ -1,5 +1,6 @@
-import { selfContainedArr, weaponNames, weaponTypes } from '@data/randomData'
+import { weaponTypes } from '@icemourne/description-converter'
 import * as monaco from 'monaco-editor'
+import { selfContainedArr } from 'src/data/randomData'
 import { createConditionalSuggestions, createNormalSuggestions, createWrapperSuggestions, imports, titleSuggestions, variableSuggestions } from './autoCompletion'
 
 export interface ConditionalSuggestions {
@@ -27,7 +28,7 @@ export function createEditor() {
       selfContained: selfContainedArr.map((w) => `<${w}/>`).join('|'),
 
       weapons: [
-         ...weaponNames,
+         ...weaponTypes,
          'other'
       ]
          .map((w) => ` ${w},? ?`)

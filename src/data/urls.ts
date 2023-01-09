@@ -1,20 +1,22 @@
-export const apiUrls = {
-  versions:
-    "https://api.github.com/repos/Ice-mourne/database-clarity/contents/versions.json",
-  clarity:
-    "https://api.github.com/repos/Ice-mourne/database-clarity/contents/descriptions/clarity.json",
-  crayon:
-    "https://api.github.com/repos/Ice-mourne/database-clarity/contents/descriptions/crayon.json",
-  dim: "https://api.github.com/repos/Ice-mourne/database-clarity/contents/descriptions/dim.json",
-  lightGG:
-    "https://api.github.com/repos/Ice-mourne/database-clarity/contents/descriptions/lightGG.json",
-  live: "https://api.github.com/repos/Database-Clarity/Live-Clarity-Database/contents/liveDescription.json",
-  intermediate:
-    "https://api.github.com/repos/Database-Clarity/Live-Clarity-Database/contents/intermediateDescriptions.json",
-};
+const descriptionApiUrlBase = 'https://api.github.com/repos/Database-Clarity/Live-Clarity-Database/contents/',
+   descriptionRawUrlBase = 'https://raw.githubusercontent.com/Database-Clarity/Live-Clarity-Database/',
+   dataGeneratorApiUrlBase = 'https://api.github.com/repos/Database-Clarity/Description-data-generator/contents/',
+   dataGeneratorRawUrlBase = 'https://raw.githubusercontent.com/Database-Clarity/Description-data-generator/'
 
-export const descriptionUrls = {
-   clovis: 'https://raw.githubusercontent.com/Clarity-Control/database-clarity/test/descriptions.json' as const,
-   // clovis: 'https://raw.githubusercontent.com/Clovis-Breh/database-clarity/test/descriptions.json' as const,
-   iceWithEditor: 'https://raw.githubusercontent.com/Ice-mourne/database-clarity/test/descriptionsWithEditor.json' as const
-}
+export const apiUrlsV2 = {
+   live: {
+      url: descriptionApiUrlBase + 'liveDescriptions.json',
+      branch: 'converter',
+      raw: descriptionRawUrlBase + 'converter/' + 'liveDescriptions.json'
+   },
+   intermediate: {
+      url: descriptionApiUrlBase + 'intermediateDescriptions.json',
+      branch: 'intermediate',
+      raw: descriptionRawUrlBase + 'intermediate/' + 'intermediateDescriptions.json'
+   },
+   dataGenerator: {
+      url: dataGeneratorApiUrlBase + '/templates/descriptions.json',
+      branch: 'main',
+      raw: dataGeneratorRawUrlBase + 'main/' + '/templates/descriptions.json'
+   }
+} as const

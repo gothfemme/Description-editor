@@ -1,9 +1,10 @@
-import { useAppSelector } from '@redux/hooks'
-import { Database, GlobalState, Perk, Stat, StatNames } from '@redux/interfaces'
+import { Database, IntermediatePerk, Stat, StatNames } from '@icemourne/description-converter'
+import { GlobalState } from '../interfaces'
 import { PayloadAction } from '@reduxjs/toolkit'
-import { getLoginDetails } from '@utils/getLogin'
-import { cleanObject } from '@icemourne/tool-box'
 import { WritableDraft } from 'immer/dist/internal'
+import { cleanObject } from '@icemourne/tool-box'
+import { getLoginDetails } from 'src/utils/getLogin'
+import { useAppSelector } from '../hooks'
 
 export type ButtonActions = 'uploadToLive' | 'hidden' | 'optional'
 type State = WritableDraft<GlobalState>
@@ -12,13 +13,6 @@ export const databaseReducers = {
    togglePerkStuff: (state: State, action: PayloadAction<ButtonActions>) => {
       const currentlySelected = state.settings.currentlySelected
       state.database[currentlySelected][action.payload] = !state.database[currentlySelected][action.payload]
-   },
-   removePerk: (state: State, action: PayloadAction<number>) => {
-      const databaseCopy = {
-         ...state.database
-      }
-      delete databaseCopy[action.payload]
-      state.database = databaseCopy
    },
    updateEditorValue: (state: State, action: PayloadAction<[string, 'main' | 'secondary']>) => {
       const currentlySelected = state.settings.currentlySelected,
@@ -81,7 +75,7 @@ export const databaseReducers = {
          updatedBy: getLoginDetails()?.username || ''
       }
    },
-   addPerk: (state: State, action: PayloadAction<{ hash: number; perk: Perk }>) => {
+   addPerk: (state: State, action: PayloadAction<{ hash: number; perk: IntermediatePerk }>) => {
       state.database = {
          ...state.database,
          [action.payload.hash]: action.payload.perk
@@ -89,29 +83,6 @@ export const databaseReducers = {
    },
    resetPerk: (state: State, action: PayloadAction<number>) => {
       state.database[action.payload] = state.originalDatabase.live[action.payload]
-   },
-   linkWithEnhanced: (state: State, action: PayloadAction<{ enhancedPerkHash: number; normalPerkHash: number }>) => {
-      const { enhancedPerkHash, normalPerkHash } = action.payload
-
-      // remove old links from enhanced and normal perks
-      const currentlyLinkedWith = state.database[normalPerkHash].linkedWith
-      if (currentlyLinkedWith !== undefined) {
-         state.database[currentlyLinkedWith].linkedWith = undefined
-         state.database[currentlyLinkedWith].editor[state.settings.language]!.main = ''
-         state.database[currentlyLinkedWith].editor[state.settings.language]!.secondary = ''
-      }
-      state.database[normalPerkHash].linkedWith = enhancedPerkHash === 0 ? undefined : enhancedPerkHash
-
-      // set new links to enhanced and normal perk unless hash is 0
-      if (enhancedPerkHash !== 0) {
-         state.database[enhancedPerkHash].linkedWith = normalPerkHash
-         state.database[normalPerkHash].linkedWith = enhancedPerkHash
-
-         state.database[enhancedPerkHash].editor[state.settings.language]!.main = `import main from ${normalPerkHash}`
-         state.database[enhancedPerkHash].editor[
-            state.settings.language
-         ]!.secondary = `import secondary from ${normalPerkHash}`
-      }
    },
    updateDatabase: (state: State, action: PayloadAction<{databaseType: 'live' | 'intermediate', newDatabase: Database}>) => {
       const {databaseType, newDatabase} = action.payload

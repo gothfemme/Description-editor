@@ -1,128 +1,131 @@
-import { apiUrls, descriptionUrls } from "@data/urls";
-import { Database } from "@redux/interfaces";
-import { decode, encode } from "js-base64";
-import { getLoginDetails } from "./getLogin";
-import { sendMessage } from "./sendMessage";
+import { decode, encode } from 'js-base64'
 
+import { Database } from '@icemourne/description-converter'
+import { apiUrlsV2 } from 'src/data/urls'
+import { defaultPerk } from 'src/data/randomData'
+import { getLoginDetails } from './getLogin'
+import { persistentFetch } from '@icemourne/tool-box'
+
+export interface DataToSend {
+   sha: string
+   content: string
+}
 export interface GithubJsonResponse {
-  content: string;
-  sha: string;
+   content: string
+   sha: string
 }
 
 export interface GithubGetResponse {
-  content: string | object;
-  sha: string;
+   content: Database
+   sha: string
 }
 
-export async function githubGet(
-  location: keyof typeof apiUrls
-): Promise<GithubGetResponse | string> {
-  const url = apiUrls[location] + "?ref=converter";
-  const login = getLoginDetails();
-  if (login === null) {
-    return "Login details missing";
-  }
+export async function githubGet(location: keyof typeof apiUrlsV2): Promise<GithubGetResponse | string> {
+   const url = apiUrlsV2[location].raw + `?ref=${apiUrlsV2[location].branch}`
+   const login = getLoginDetails()
+   if (login === null) {
+      return 'Login details missing'
+   }
 
-  const resp = await fetch(url, {
-    method: "GET",
-    mode: "cors",
-    headers: {
-      authorization: `token ${decode(login.password)}`,
-      accept: "application/vnd.github+json",
-    },
-  });
-
-  if (resp.status !== 200) {
-    return "Something went wrong while downloading";
-  }
-
-  const respJson: GithubJsonResponse = await resp.json();
-
-  if (!respJson.content) {
-    const rawResp = await fetch(url, {
-      method: "GET",
-      mode: "cors",
+   const resp = await persistentFetch(url, 5, {
+      method: 'GET',
+      mode: 'cors',
       headers: {
-        authorization: `token ${decode(login.password)}`,
-        accept: "application/vnd.github.raw+json",
+         authorization: `token ${decode(login.password)}`,
+         accept: 'application/vnd.github+json'
+      }
+   })
+
+   if (resp === Error) {
+      return resp.message
+   }
+
+   const respJson: GithubJsonResponse = resp
+
+   // if content is empty it means file is over 1MB in size and it has to be downloaded as raw
+   if (!respJson.content) {
+      const rawResp = await persistentFetch(url, 5, {
+         method: 'GET',
+         mode: 'cors',
+         headers: {
+            authorization: `token ${decode(login.password)}`,
+            accept: 'application/vnd.github.raw+json'
+         }
+      })
+
+      if (resp === Error) {
+         return resp.message
+      }
+
+      return {
+         content: rawResp,
+         sha: respJson.sha
+      }
+   }
+
+   return {
+      content: JSON.parse(decode(respJson.content)),
+      sha: respJson.sha
+   }
+}
+
+export async function githubPut(location: keyof typeof apiUrlsV2, data: DataToSend): Promise<true | string> {
+   const api = apiUrlsV2[location]
+   const login = getLoginDetails()
+   if (login === null) {
+      return 'Login details missing'
+   }
+
+   const resp = await persistentFetch(api.url, 5, {
+      method: 'PUT',
+      mode: 'cors',
+      headers: {
+         authorization: `token ${decode(login.password)}`,
+         accept: 'application/vnd.github+json'
       },
-    });
+      body: JSON.stringify({
+         sha: data.sha,
+         branch: api.branch,
+         message: `Updated by ${login.username}`,
+         content: encode(`${data.content}\n`)
+      })
+   })
 
-    if (rawResp.status !== 200) {
-      return "Something went wrong while downloading raw media type";
-    }
-
-    const rawRespJson: object = await rawResp.json();
-
-    return {
-      content: rawRespJson,
-      sha: respJson.sha,
-    };
-  }
-
-  return {
-    content: decode(respJson.content),
-    sha: respJson.sha,
-  };
+   if (resp === Error) {
+      return resp.message
+   }
+   return true
 }
 
-export interface DataToSend {
-  sha: string;
-  content: string;
+const unauthorized = async (location: keyof typeof apiUrlsV2): Promise<Database> => {
+   const { raw } = apiUrlsV2[location]
+   
+   const resp = await persistentFetch(raw, 3)
+   if (resp === Error) {
+      return resp.message
+   }
+   return resp
 }
-export async function githubPut(
-  location: keyof typeof apiUrls,
-  data: DataToSend,
-  retries: number = 0
-): Promise<true | string> {
-  const url = apiUrls[location];
-  const login = getLoginDetails();
-  if (login === null) {
-    return "Login details missing";
-  }
-
-  const resp = await fetch(url, {
-    method: "PUT",
-    mode: "cors",
-    headers: {
-      authorization: `token ${decode(login.password)}`,
-      accept: "application/vnd.github+json",
-    },
-    body: JSON.stringify({
-      sha: data.sha,
-      branch: "converter",
-      message: `Updated by ${login.username}`,
-      content: encode(`${data.content}\n`),
-    }),
-  });
-
-  if (resp.status !== 200) {
-    if (retries < 4) {
-      sendMessage("Failed upload retrying", "error");
-      return githubPut(location, data, retries + 1);
-    }
-    return "Giving up failed 5 times";
-  }
-  return true;
-}
-
-const unauthorized = async (location: keyof typeof descriptionUrls) => {
-  const url = descriptionUrls[location] + "?ref=converter";
-  const response = await fetch(url, {
-    method: "GET",
-    mode: "cors",
-  });
-  const json: Database = await response.json();
-  return json;
-};
 
 export async function getStartUpDescriptions() {
-  const resp = await Promise.all([
-    unauthorized("clovis"),
-    unauthorized("iceWithEditor"),
-  ]);
-  return {
-    intermediate: resp[0],
-    live: resp[1],
-  };
+   const intermediateResp = unauthorized('intermediate'),
+      dataGeneratorResp = unauthorized('dataGenerator'),
+      liveResp = unauthorized('live')
+
+   const intermediate = await intermediateResp,
+      dataGenerator = await dataGeneratorResp,
+      live = await liveResp
+
+   const updatedIntermediate = Object.entries(dataGenerator).reduce((acc, [key, value]) => {
+      acc[key] = {
+         ...(intermediate[key] || defaultPerk),
+         ...value
+      }
+      return acc
+   }, intermediate)
+
+   return {
+      intermediate: updatedIntermediate,
+      live
+   }
 }

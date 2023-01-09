@@ -1,41 +1,38 @@
 import './App.scss'
 
-import Editor from '@components/editor/Editor'
-import { Note } from '@components/itemPopup/Extra'
-import { Header } from '@components/itemPopup/Header'
-import { Perks } from '@components/itemPopup/Perks'
-import { Sockets } from '@components/itemPopup/Sockets'
-import { Stats } from '@components/itemPopup/Stats'
-import { AddNewPerk } from '@components/sideBar/AddNewPerks'
-import { BasicInfo } from '@components/sideBar/BasicItemInfo'
 import {
    ButtonChangeEditor,
-   ButtonDeletePerk,
    ButtonToggleHiddenPerks,
-   ButtonUploadIce,
-   ButtonUploadIntermediate, MultiButton, ResetDescription,
+   ButtonUploadIntermediate,
+   ButtonUploadLive,
+   MultiButton,
+   ResetDescription,
    ToggleGlobalUploadToLive
-} from '@components/sideBar/Buttons'
-import { Login } from '@components/sideBar/Login'
-import { Message } from '@components/sideBar/Message'
-import { PerkSelection } from '@components/sideBar/Selection'
-
-import { LanguageSelection } from '@components/sideBar/LanguageSelection'
+} from './components/sideBar/Buttons'
 import { StrictMode, useState } from 'react'
-import ReactDOM from 'react-dom/client'
-import { createEditor } from './components/editor/monaco/monacoEditor'
+import { changePerkType, changeSelectedPerk } from './redux/globalSlice'
 
-import { PerkLinking } from '@components/sideBar/PerkLinking'
-import { NewStatSelection } from '@components/sideBar/stats/NewStatSelection'
-import { UpdateTracker } from '@components/sideBar/UpdateTracker'
-import { VerticalDivider } from '@components/universal/VerticalDivider'
-import { useAppDispatch, useAppSelector } from '@redux/hooks'
-import { store } from '@redux/store'
-import { Provider } from 'react-redux'
-
+import { BasicInfo } from './components/sideBar/BasicItemInfo'
+import { Button } from './components/universal/Button'
+import Editor from './components/editor/Editor'
 import { ErrorBoundary } from 'react-error-boundary'
-import { Button } from '@components/universal/Button'
-import { changePerkType, changeSelectedPerk } from '@redux/globalSlice'
+import { Header } from './components/itemPopup/Header'
+import { LanguageSelection } from './components/sideBar/LanguageSelection'
+import { Login } from './components/sideBar/Login'
+import { Message } from './components/sideBar/Message'
+// import { NewStatSelection } from './components/sideBar/stats/NewStatSelection'
+import { Note } from './components/itemPopup/Extra'
+import { PerkSelection } from './components/sideBar/Selection'
+import { Perks } from './components/itemPopup/Perks'
+import { Provider } from 'react-redux'
+import ReactDOM from 'react-dom/client'
+import { Sockets } from './components/itemPopup/Sockets'
+import { Stats } from './components/itemPopup/Stats'
+import { UpdateTracker } from './components/sideBar/UpdateTracker'
+import { VerticalDivider } from './components/universal/VerticalDivider'
+import { createEditor } from './components/editor/monaco/monacoEditor'
+import { store } from './redux/store'
+import { useAppDispatch } from './redux/hooks'
 
 function ErrorFallback(setExplode: React.Dispatch<React.SetStateAction<boolean>>) {
    const dispatch = useAppDispatch()
@@ -43,7 +40,7 @@ function ErrorFallback(setExplode: React.Dispatch<React.SetStateAction<boolean>>
    const onReset = () => {
       dispatch(changePerkType('none'))
       dispatch(changeSelectedPerk(0))
-      setExplode(e => !e)
+      setExplode((e) => !e)
    }
 
    return (
@@ -64,10 +61,6 @@ function ErrorFallback(setExplode: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 function App() {
-   const globalState = useAppSelector((state) => state.global)
-   const newPerkWindow = globalState.settings.newPerkWindow
-   const allowPerkLinking = globalState.settings.selectedType === 'weaponPerk'
-
    const [explode, setExplode] = useState(false)
    return (
       <ErrorBoundary
@@ -84,48 +77,39 @@ function App() {
          </div>
          <Editor onMount={createEditor} />
          <div className="side_bar">
-            {!newPerkWindow && (
-               <>
-                  <PerkSelection />
-                  <LanguageSelection />
-                  <BasicInfo />
-                  <NewStatSelection />
-                  <VerticalDivider />
-               </>
-            )}
-            <AddNewPerk />
+            <>
+               <PerkSelection />
+               <LanguageSelection />
+               <BasicInfo />
+               {/* <NewStatSelection /> */}
 
-            {!newPerkWindow && (
-               <>
-                  <ButtonDeletePerk />
-                  {allowPerkLinking && <PerkLinking />}
-                  <VerticalDivider />
-                  <MultiButton action="optional" />
-                  <MultiButton action="hidden" />
-                  <ButtonToggleHiddenPerks />
-                  <VerticalDivider />
+               <VerticalDivider />
+               <MultiButton action="optional" />
+               <MultiButton action="hidden" />
+               <ButtonToggleHiddenPerks />
+               <VerticalDivider />
 
-                  <ButtonChangeEditor />
-                  <ResetDescription />
-                  <VerticalDivider />
+               <ButtonChangeEditor />
+               <ResetDescription />
+               <VerticalDivider />
 
-                  <ToggleGlobalUploadToLive />
-                  <MultiButton action="uploadToLive" />
-                  <ButtonUploadIce labelText="Upload - Live database" />
-                  <ButtonUploadIntermediate labelText="Upload - Secondary Database" />
-                  <VerticalDivider />
+               <ToggleGlobalUploadToLive />
+               <MultiButton action="uploadToLive" />
+               <ButtonUploadLive labelText="Upload - Live database" />
+               <ButtonUploadIntermediate labelText="Upload - Secondary Database" />
+               <VerticalDivider />
 
-                  <Message />
-                  <Login />
+               <Message />
+               <Login />
 
-                  <VerticalDivider />
-                  <UpdateTracker />
-               </>
-            )}
+               <VerticalDivider />
+               <UpdateTracker />
+            </>
          </div>
       </ErrorBoundary>
    )
 }
+
 ReactDOM.createRoot(document.getElementById('app')!).render(
    <StrictMode>
       <Provider store={store}>

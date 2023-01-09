@@ -1,9 +1,8 @@
-import { Select } from '@components/universal/Select'
-import { setStatImport } from '@redux/globalSlice'
-import { useAppDispatch, useAppSelector } from '@redux/hooks'
-import { PerkTypes } from '@redux/interfaces'
+import { useAppDispatch, useAppSelector } from 'src/redux/hooks'
+import { PerkTypes } from '@icemourne/description-converter'
+import { Select } from 'src/components/universal/Select'
 import _ from 'lodash'
-
+import { setStatImport } from 'src/redux/globalSlice'
 import styles from './NewStatSelection.module.scss'
 
 type PerkWithStatsList = {

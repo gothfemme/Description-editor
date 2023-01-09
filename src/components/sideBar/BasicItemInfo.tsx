@@ -1,13 +1,13 @@
-import { useAppSelector } from '@redux/hooks'
-import { Perk, PerkTypes } from '@redux/interfaces'
+import { IntermediatePerk, PerkTypes } from '@icemourne/description-converter'
 import styles from './BasicItemInfo.module.scss'
+import { useAppSelector } from 'src/redux/hooks'
 
-export function InfoDisplayOptions({selectedType, selectedPerk}: {selectedType: PerkTypes, selectedPerk: Perk}) {
+export function InfoDisplayOptions({selectedType, selectedPerk}: {selectedType: PerkTypes, selectedPerk: IntermediatePerk}) {
    switch (selectedType) {
-      case 'armorExotic':
-      case 'weaponFrameExotic':
-      case 'weaponCatalystExotic':
-      case 'weaponPerkExotic':
+      case 'Armor Perk Exotic':
+      case 'Weapon Frame Exotic':
+      case 'Weapon Catalyst Exotic':
+      case 'Weapon Perk Exotic':
          return (
             <>
                <label>Item name</label>
