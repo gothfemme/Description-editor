@@ -45,19 +45,31 @@ const preloadedState: { global: GlobalState } = {
    }
 }
 
-export const store = configureStore({
-   reducer: {
-      global: globalReducer
-   },
-   preloadedState,
-   // any because it fails to build with GitHub actions
-   middleware: (getDefaultMiddleware: any) =>
-      getDefaultMiddleware({
-         thunk: true,
-         serializableCheck: false,
-         immutableCheck: false
-      })
-})
+let storeVariable
+
+if (import.meta.env.DEV) {
+   storeVariable = configureStore({
+      reducer: {
+         global: globalReducer
+      },
+      preloadedState,
+      middleware: (getDefaultMiddleware) =>
+         getDefaultMiddleware({
+            thunk: true,
+            serializableCheck: false,
+            immutableCheck: false
+         })
+   })
+} else {
+   storeVariable = configureStore({
+      reducer: {
+         global: globalReducer
+      },
+      preloadedState,
+   })
+}
+
+export const store = storeVariable
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>
