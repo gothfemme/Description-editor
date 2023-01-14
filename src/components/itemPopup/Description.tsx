@@ -146,8 +146,6 @@ export function DescriptionBuilder({
          enhancedStats = enhancedHash ? bungie.inventoryItem?.[enhancedHash]?.investmentStats : undefined,
          exoticStats = exoticHash ? bungie.inventoryItem?.[exoticHash]?.investmentStats : undefined
 
-      debugger
-
       return (
          <>
             {perkStats && perkStats.length !== 0 && (
