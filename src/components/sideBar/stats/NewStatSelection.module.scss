@@ -23,3 +23,60 @@
 .centeredText {
    text-align: center;
 }
+
+.statName {
+   text-align: center;
+   text-transform: uppercase;
+   font-weight: bold;
+   letter-spacing: 0.5px;
+   word-spacing: 3px;
+   cursor: pointer;
+   &:hover {
+      color: $orange-color;
+   }
+}
+
+.stats {
+   display: flex;
+   flex-direction: row;
+   background-color: hsla(0deg, 0%, 48%, 0.259);
+   padding: 5px;
+    width: 100%;
+}
+
+.statsTest {
+   display: flex;
+   flex-direction: row;
+   background-color: hsla(0deg, 0%, 48%, 0.259);
+   padding: 5px;
+   width: 100%;
+   position: absolute;
+}
+
+.stat {
+   margin-right: 5px;
+}
+
+.statValues {
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+   margin-bottom: 5px;
+}
+
+.statValue {
+   display: flex;
+   flex-direction: row;
+   justify-content: space-between;
+   align-items: center;
+   margin-bottom: 3px;
+   input {
+      background-color: rgba(255, 255, 255, 0);
+      color: hsl(0, 0%, 100%);
+      margin-left: 3px;
+   }
+}
+
+.statUpdater {
+   position: absolute;
+}

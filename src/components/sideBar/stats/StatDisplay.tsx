@@ -3,9 +3,8 @@ import { Stat, StatNames, Stats, WeaponTypes } from '@icemourne/description-conv
 
 // import { Button } from 'src/components/universal/Button'
 // import { Updater } from 'use-immer'
-// import _ from 'lodash'
 // import { removeStat } from 'src/redux/globalSlice'
-// import { statsArrayToString } from 'src/utils/statsToStringAndBack'
+// import { statsToString } from 'src/utils/statsToStringAndBack'
 // import styles from './StatDisplay.module.scss'
 
 // interface DisplayStats {
@@ -31,7 +30,7 @@ import { Stat, StatNames, Stats, WeaponTypes } from '@icemourne/description-conv
 //    weaponTypes: WeaponTypes[]
 // }
 
-// export function StatsDisplay({
+// export function StatsDisplay({ 
 //    allowEdit,
 //    setDisplayStats,
 //    setStats,
@@ -53,9 +52,15 @@ import { Stat, StatNames, Stats, WeaponTypes } from '@icemourne/description-conv
 //    const importedPerk = importedPerkHash ? database[importedPerkHash] : undefined
 //    const importedPerkStats = importedPerk?.stats
 
-//    const linkedPerkHash = selectedPerk.linkedWith
-//    const linkedPerk = linkedPerkHash ? database[linkedPerkHash] : undefined
-//    const linkedPerkStats = linkedPerk?.stats
+//    const linkedPerks = selectedPerk.linkedWith
+
+//    const linkedPerkStats = linkedPerks ? {
+//       perkExotic: database[linkedPerks['Weapon Perk Exotic'] || 69]?.stats,
+//       frameExotic: database[linkedPerks['Weapon Frame Exotic'] || 69]?.stats,
+//       catalystExotic: database[linkedPerks['Weapon Catalyst Exotic'] || 69]?.stats,
+//       perkEnhanced: database[linkedPerks['Weapon Perk Enhanced'] || 69]?.stats,
+//       perk: database[linkedPerks['Weapon Perk'] || 69]?.stats,
+//    } : undefined
 
 //    const StatComponent = ({
 //       stat,
@@ -73,13 +78,13 @@ import { Stat, StatNames, Stats, WeaponTypes } from '@icemourne/description-conv
 //                {stat?.[statType]?.stat && (
 //                   <>
 //                      <span>Stat</span>
-//                      <span>{statsArrayToString(stat?.[statType]?.stat)}</span>
+//                      <span>{statsToString(stat?.[statType]?.stat)}</span>
 //                   </>
 //                )}
 //                {stat?.[statType]?.multiplier && (
 //                   <>
 //                      <span>Multiplier</span>
-//                      <span>{statsArrayToString(stat?.[statType]?.multiplier)}</span>
+//                      <span>{statsToString(stat?.[statType]?.multiplier)}</span>
 //                   </>
 //                )}
 //             </div>
@@ -87,7 +92,7 @@ import { Stat, StatNames, Stats, WeaponTypes } from '@icemourne/description-conv
 //       )
 //    }
 
-//    const moveStats = (hash: number, statName: StatNames, index: number) => {
+//    const removeStats = (hash: number, statName: StatNames, index: number) => {
 //       const stat = database[hash]?.stats?.[statName]?.[index]
 
 //       setStatName(statName)
@@ -102,12 +107,12 @@ import { Stat, StatNames, Stats, WeaponTypes } from '@icemourne/description-conv
 
 //       setDisplayStats((draft) => {
 //          draft.active = {
-//             multiplier: statsArrayToString(stat?.active?.multiplier),
-//             stat: statsArrayToString(stat?.active?.stat)
+//             multiplier: statsToString(stat?.active?.multiplier),
+//             stat: statsToString(stat?.active?.stat)
 //          }
 //          draft.passive = {
-//             multiplier: statsArrayToString(stat?.passive?.multiplier),
-//             stat: statsArrayToString(stat?.passive?.stat)
+//             multiplier: statsToString(stat?.passive?.multiplier),
+//             stat: statsToString(stat?.passive?.stat)
 //          }
 //       })
 
@@ -139,7 +144,7 @@ import { Stat, StatNames, Stats, WeaponTypes } from '@icemourne/description-conv
 //                         >
 //                            Remove
 //                         </Button>
-//                         <Button onClick={() => moveStats(perkHash, statName, i)} className={styles.editButton}>
+//                         <Button onClick={() => removeStats(perkHash, statName, i)} className={styles.editButton}>
 //                            Edit
 //                         </Button>
 //                      </>
@@ -159,7 +164,7 @@ import { Stat, StatNames, Stats, WeaponTypes } from '@icemourne/description-conv
 //    }
 
 //    // dose linked perk imports stats from selected perk?
-//    const linkedImportsStats = linkedPerk?.importStatsFrom === selectedPerkHash
+//    const linkedImportsStats = undefined //linkedPerk?.importStatsFrom === selectedPerkHash
 
 //    return (
 //       <div className={styles.statDisplayContainer}>
@@ -175,12 +180,12 @@ import { Stat, StatNames, Stats, WeaponTypes } from '@icemourne/description-conv
 //                {newStatListMaker(importedPerkStats)}
 //             </>
 //          )}
-//          {selectedPerk.type === 'Weapon Perk' && linkedPerkStats && linkedPerkHash && (
+//          {/* {selectedPerk.type === 'Weapon Perk' && linkedPerkStats && linkedPerks && (
 //             <>
 //                <div className={styles.name}>Stat on linked perk</div>
-//                {newStatListMaker(linkedPerkStats, linkedPerkHash['Weapon Perk Enhanced'])}
+//                {newStatListMaker(linkedPerkStats, linkedPerks['Weapon Perk Enhanced'])}
 //             </>
-//          )}
+//          )} */}
 //       </div>
 //    )
 // }

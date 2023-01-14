@@ -20,14 +20,11 @@ import { Header } from './components/itemPopup/Header'
 import { LanguageSelection } from './components/sideBar/LanguageSelection'
 import { Login } from './components/sideBar/Login'
 import { Message } from './components/sideBar/Message'
-// import { NewStatSelection } from './components/sideBar/stats/NewStatSelection'
-import { Note } from './components/itemPopup/Extra'
+import { NewStatSelection } from './components/sideBar/stats/NewStatSelection'
 import { PerkSelection } from './components/sideBar/Selection'
 import { Perks } from './components/itemPopup/Perks'
 import { Provider } from 'react-redux'
 import ReactDOM from 'react-dom/client'
-import { Sockets } from './components/itemPopup/Sockets'
-import { Stats } from './components/itemPopup/Stats'
 import { UpdateTracker } from './components/sideBar/UpdateTracker'
 import { VerticalDivider } from './components/universal/VerticalDivider'
 import { createEditor } from './components/editor/monaco/monacoEditor'
@@ -68,44 +65,44 @@ function App() {
          onReset={() => setExplode(false)}
          resetKeys={[explode]}
       >
-         <div className="item_popup">
-            <Header />
-            <Note />
-            <Stats />
-            <Sockets />
-            <Perks />
+         <div className="main">
+            <div className="item_popup">
+               <Header />
+               <Perks />
+            </div>
+            <Editor onMount={createEditor} />
+            <div className="side_bar">
+               <>
+                  <PerkSelection />
+                  <LanguageSelection />
+                  <BasicInfo />
+
+                  <VerticalDivider />
+                  <MultiButton action="optional" />
+                  <MultiButton action="hidden" />
+                  <ButtonToggleHiddenPerks />
+                  <VerticalDivider />
+
+                  <ButtonChangeEditor />
+                  <ResetDescription />
+                  <VerticalDivider />
+
+                  <ToggleGlobalUploadToLive />
+                  <MultiButton action="uploadToLive" />
+                  <ButtonUploadLive labelText="Upload - Live database" />
+                  <ButtonUploadIntermediate labelText="Upload - Secondary Database" />
+                  <VerticalDivider />
+
+                  <Message />
+                  <Login />
+
+                  <VerticalDivider />
+                  <UpdateTracker />
+               </>
+            </div>
          </div>
-         <Editor onMount={createEditor} />
-         <div className="side_bar">
-            <>
-               <PerkSelection />
-               <LanguageSelection />
-               <BasicInfo />
-               {/* <NewStatSelection /> */}
 
-               <VerticalDivider />
-               <MultiButton action="optional" />
-               <MultiButton action="hidden" />
-               <ButtonToggleHiddenPerks />
-               <VerticalDivider />
-
-               <ButtonChangeEditor />
-               <ResetDescription />
-               <VerticalDivider />
-
-               <ToggleGlobalUploadToLive />
-               <MultiButton action="uploadToLive" />
-               <ButtonUploadLive labelText="Upload - Live database" />
-               <ButtonUploadIntermediate labelText="Upload - Secondary Database" />
-               <VerticalDivider />
-
-               <Message />
-               <Login />
-
-               <VerticalDivider />
-               <UpdateTracker />
-            </>
-         </div>
+         <NewStatSelection />
       </ErrorBoundary>
    )
 }

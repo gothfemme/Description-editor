@@ -33,7 +33,6 @@ export function Perks() {
    const mainDescription = descriptionConverter(descriptionDataMain)
    const secondaryDescription = descriptionFilter(descriptionConverter(descriptionDataSecondary), 'dim')
 
-
    return (
       <div className={styles.perk_box}>
          <div className={styles.perk_list}>
@@ -58,7 +57,7 @@ export function Perks() {
                <div className={cnc(styles.name, styles.name_active)}>{perk.name}</div>
             </div>
          </div>
-         <div className={styles.perk_list}>
+         {/* <div className={styles.perk_list}>
             <div className={cnc(styles.perk, styles.perk_active)}>
                <div className={cnc(styles.icon_container, styles.icon_container_active)}>
                   <img src="https://bungie.net/common/destiny2_content/icons/f2ff6ea4498ad2d808b4af21e93cf5fe.png" />
@@ -73,7 +72,7 @@ export function Perks() {
                </div>
                <div className={cnc(styles.name, styles.name_active)}>{perk.name}</div>
             </div>
-         </div>
+         </div> */}
       </div>
    )
 }

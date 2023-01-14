@@ -1,6 +1,7 @@
 import { defaultDescription, defaultPerk } from 'src/data/randomData'
 
 import { GlobalState } from './interfaces'
+import _ from 'lodash'
 import { configureStore } from '@reduxjs/toolkit'
 import { fetchBungieManifest } from '@icemourne/tool-box'
 import { getStartUpDescriptions } from 'src/utils/github'

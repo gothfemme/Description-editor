@@ -1,5 +1,7 @@
 import * as monaco from 'monaco-editor'
+
 import { useEffect, useState } from 'react'
+
 import { editorHotkeys } from './editorHotkeys'
 import { editorUpdater } from './editorUpdater'
 import { store } from 'src/redux/store'
@@ -72,9 +74,13 @@ export default function Editor({ onMount }: { onMount: () => typeof monaco.edito
    }, [editorSize])
    return (
       <div className="editor-container">
-         <div id="main-editor" style={{ height: `${editorSize}%` }}></div>
-         <div id="secondary-editor" style={{ height: `${100 - Number(editorSize)}%` }}></div>
+         <div className="editor">
+            <div id="main-editor" style={{ height: `${editorSize}%` }}></div>
+            <div id="secondary-editor" style={{ height: `${100 - Number(editorSize)}%` }}></div>
+         </div>
+         <div className='slider'>
          <input type="range" value={editorSize} min="2" max="98" onChange={(e) => setEditorSize(e.target.value)} />
+         </div>
       </div>
    )
 }
