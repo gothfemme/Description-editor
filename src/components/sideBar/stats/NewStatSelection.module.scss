@@ -38,10 +38,9 @@
 
 .stats {
    display: flex;
-   flex-direction: row;
+   flex-direction: column;
    background-color: hsla(0deg, 0%, 48%, 0.259);
    padding: 5px;
-    width: 100%;
 }
 
 .statsTest {
@@ -74,9 +73,15 @@
       background-color: rgba(255, 255, 255, 0);
       color: hsl(0, 0%, 100%);
       margin-left: 3px;
+      width: 63%;
    }
 }
 
 .statUpdater {
    position: absolute;
+   left: 380px;
+   z-index: 5;
+   background-color: hsl(240deg 8% 20%);
+   width: 350px;
+   padding: 5px;
 }

@@ -33,7 +33,13 @@ const joinClassNames = (classNames: (string | null | undefined)[] | undefined) =
       .join(' ')
 }
 
-export function DescriptionBuilder({ description }: { description: DescriptionLine[] | string }): JSX.Element {
+export function DescriptionBuilder({
+   description,
+   addInvStats
+}: {
+   description: DescriptionLine[] | string
+   addInvStats: boolean
+}): JSX.Element {
    const { bungie, database, settings } = store.getState().global
    const selectedWeaponType = settings.weaponType
    const currentlySelected = settings.currentlySelected
@@ -140,6 +146,8 @@ export function DescriptionBuilder({ description }: { description: DescriptionLi
          enhancedStats = enhancedHash ? bungie.inventoryItem?.[enhancedHash]?.investmentStats : undefined,
          exoticStats = exoticHash ? bungie.inventoryItem?.[exoticHash]?.investmentStats : undefined
 
+      debugger
+
       return (
          <>
             {perkStats && perkStats.length !== 0 && (
@@ -208,7 +216,7 @@ export function DescriptionBuilder({ description }: { description: DescriptionLi
 
    return (
       <div className={styles.description}>
-         {buildDescription(description)} {investmentStats()}
+         {buildDescription(description)} {addInvStats && investmentStats()}
       </div>
    )
 }

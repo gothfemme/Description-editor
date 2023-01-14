@@ -3,7 +3,7 @@ import { Updater, useImmer } from 'use-immer'
 import { useAppDispatch, useAppSelector } from 'src/redux/hooks'
 
 import { StatNames } from '@icemourne/description-converter'
-import { TypedObject } from 'src/utils/typedObjects'
+import { TypedObject } from '@icemourne/tool-box'
 import _ from 'lodash'
 import styles from './NewStatSelection.module.scss'
 import { useEffect } from 'react'
@@ -39,7 +39,7 @@ const StatValues = ({
    )
 }
 
-const StatComponent = ({ stats, editMode = true }: { stats: StringStat[], editMode?: boolean}) => {
+const StatComponent = ({ stats, editMode = true }: { stats: StringStat[]; editMode?: boolean }) => {
    const revereStats = stats.slice(0).reverse()
 
    return (
@@ -71,15 +71,13 @@ const StatUpdater = ({
    setDisplayStats: Updater<StringStats>
 }) => {
    return (
-      <div className={styles.statsTest}>
-         <div className={styles.statUpdater}>
-            {TypedObject.entries(displayStats).map(([statName, stat]) => (
-               <div key={statName} className={styles.stat}>
-                  {/* <div className={styles.statName}>{_.startCase(statName)}</div> */}
-                  <StatComponent stats={stat} editMode={false} />
-               </div>
-            ))}
-         </div>
+      <div className={styles.statUpdater}>
+         {TypedObject.entries(displayStats).map(([statName, stat]) => (
+            <div key={statName} className={styles.stat}>
+               <div className={styles.statName}>{_.startCase(statName)}</div>
+               <StatComponent stats={stat} editMode={false} />
+            </div>
+         ))}
       </div>
    )
 }

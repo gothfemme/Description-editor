@@ -69,6 +69,7 @@ function App() {
             <div className="item_popup">
                <Header />
                <Perks />
+               <NewStatSelection />
             </div>
             <Editor onMount={createEditor} />
             <div className="side_bar">
@@ -101,8 +102,6 @@ function App() {
                </>
             </div>
          </div>
-
-         <NewStatSelection />
       </ErrorBoundary>
    )
 }
