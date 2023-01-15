@@ -1,5 +1,6 @@
 import { cleanObject, customJsonStringify } from '@icemourne/tool-box'
 import { githubGet, githubPut } from 'src/utils/github'
+
 import { makeNewDatabase } from './makeNewDatabase'
 import { sendMessage } from 'src/utils/sendMessage'
 import { store } from 'src/redux/store'
@@ -7,7 +8,7 @@ import { updateDatabase } from 'src/redux/globalSlice'
 
 const DATABASE_PROPERTIES = ['stat', 'multiplier', 'weaponTypes', 'classNames']
 
-export async function uploadDescriptions(location: "intermediate" | "live", uploadingToLive: boolean) {
+export async function uploadDescriptions(location: 'intermediate' | 'live', uploadingToLive: boolean) {
    sendMessage(`Attempting upload => ${location}`)
 
    const oldDatabase = await githubGet(location)
@@ -36,5 +37,6 @@ export async function uploadDescriptions(location: "intermediate" | "live", uplo
    sendMessage(`Uploaded => ${location}`, 'success')
    store.dispatch(updateDatabase({ databaseType: location, newDatabase }))
 
+   if (location === 'intermediate') return
    uploadDescriptions('intermediate', uploadingToLive)
 }

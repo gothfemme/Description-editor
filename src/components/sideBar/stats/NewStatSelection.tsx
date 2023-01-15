@@ -1,8 +1,9 @@
+import { StatNames, WeaponTypes, weaponTypes } from '@icemourne/description-converter'
 import { StringStat, StringStats, statsToString } from 'src/utils/statsToStringAndBack'
 import { Updater, useImmer } from 'use-immer'
 import { useAppDispatch, useAppSelector } from 'src/redux/hooks'
 
-import { StatNames } from '@icemourne/description-converter'
+import { Button } from 'src/components/universal/Button'
 import { TypedObject } from '@icemourne/tool-box'
 import _ from 'lodash'
 import styles from './NewStatSelection.module.scss'
@@ -11,15 +12,15 @@ import { useEffect } from 'react'
 const StatValues = ({
    stat,
    statType,
-   editMode = true
+   editMode = false
 }: {
    stat: StringStat
    statType: 'active' | 'passive'
    editMode?: boolean
 }) => {
    const showStats = {
-      active: stat?.[statType]?.stat || !editMode,
-      passive: stat?.[statType]?.multiplier || !editMode
+      active: stat?.[statType]?.stat || editMode,
+      passive: stat?.[statType]?.multiplier || editMode
    }
    return (
       <>
@@ -39,20 +40,40 @@ const StatValues = ({
    )
 }
 
-const StatComponent = ({ stats, editMode = true }: { stats: StringStat[]; editMode?: boolean }) => {
-   const revereStats = stats.slice(0).reverse()
+const StatComponent = ({
+   stats,
+   setDisplayStats,
+   editMode = false
+}: {
+   stats: StringStat[]
+   setDisplayStats?: Updater<StringStats>
+   editMode?: boolean
+}) => {
+   const weaponTypesComponent = (stat: StringStat) => {
+      if (!stat?.weaponTypes) return null
+
+      const selectedWeaponTypes = weaponTypes.map((weaponType): [WeaponTypes, boolean] => {
+         if (stat.weaponTypes?.includes(weaponType)) return [weaponType, true]
+         return [weaponType, false]
+      })
+
+      return (
+         <div className={styles.weaponTypes}>
+            {selectedWeaponTypes.map(
+               ([weaponType, selected], i, arr) =>
+                  (editMode || selected) && (
+                     <span key={i}>{`${_.upperFirst(weaponType)}${','}`}</span>
+                  )
+            )}
+         </div>
+      )
+   }
 
    return (
       <>
-         {revereStats.map((stat, i) => (
+         {stats.map((stat, i) => (
             <div key={i}>
-               {stat?.weaponTypes && (
-                  <div>
-                     {stat.weaponTypes
-                        .map((weaponType, i, arr) => `${_.upperFirst(weaponType)}${i + 1 === arr.length ? '' : ', '}`)
-                        .join('')}
-                  </div>
-               )}
+               {weaponTypesComponent(stat)}
                <div className={styles.statValues}>
                   {stat.active && <StatValues stat={stat} statType="active" editMode={editMode} />}
                   {stat.passive && <StatValues stat={stat} statType="passive" editMode={editMode} />}
@@ -75,9 +96,12 @@ const StatUpdater = ({
          {TypedObject.entries(displayStats).map(([statName, stat]) => (
             <div key={statName} className={styles.stat}>
                <div className={styles.statName}>{_.startCase(statName)}</div>
-               <StatComponent stats={stat} editMode={false} />
+               <div>
+                  <StatComponent stats={stat} setDisplayStats={setDisplayStats} editMode={true} />
+               </div>
             </div>
          ))}
+         <Button onClick={() => {}}> add stats</Button>
       </div>
    )
 }
@@ -97,9 +121,10 @@ export function NewStatSelection() {
 
    return (
       <div className={styles.stats}>
+         <Button onClick={() => setStatEditStatus((c) => !c)}>Edit</Button>
          {statEditStatus && <StatUpdater displayStats={displayStats} setDisplayStats={setDisplayStats} />}
          {TypedObject.entries(displayStats).map(([statName, stat]) => (
-            <div key={statName} className={styles.stat} onClick={() => setStatEditStatus((c) => !c)}>
+            <div key={statName} className={styles.stat}>
                <div className={styles.statName}>{_.startCase(statName)}</div>
                <StatComponent stats={stat} />
             </div>

@@ -21,11 +21,12 @@ export interface GithubGetResponse {
 }
 
 export async function githubGet(location: keyof typeof apiUrlsV2): Promise<GithubGetResponse | string> {
-   const url = apiUrlsV2[location].raw + `?ref=${apiUrlsV2[location].branch}`
+   const url = apiUrlsV2[location].url + `?ref=${apiUrlsV2[location].branch}`
    const login = getLoginDetails()
    if (login === null) {
       return 'Login details missing'
    }
+   debugger
 
    const resp = await persistentFetch(url, 5, {
       method: 'GET',
@@ -99,7 +100,6 @@ export async function githubPut(location: keyof typeof apiUrlsV2, data: DataToSe
 
 const unauthorized = async (location: keyof typeof apiUrlsV2): Promise<Database> => {
    const { raw } = apiUrlsV2[location]
-   
    const resp = await persistentFetch(raw, 3)
    if (resp === Error) {
       return resp.message

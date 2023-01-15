@@ -1,4 +1,5 @@
 import { Database, IntermediatePerk } from '@icemourne/description-converter'
+
 import _ from 'lodash'
 import { getLoginDetails } from 'src/utils/getLogin'
 import { store } from 'src/redux/store'
@@ -41,7 +42,6 @@ export const makeNewDatabase = (
          acc[modifiedPerkHash] = { ...modifiedPerk, ...uploadInfo }
          return
       }
-
 
       acc[modifiedPerkHash] = _.transform(modifiedPerk, (acc: IntermediatePerk, valueInPerk, keyInPerk) => {
          // if value was deleted it will not be added to new perk
