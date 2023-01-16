@@ -13,10 +13,6 @@ export async function uploadDescriptions(location: 'intermediate' | 'live', uplo
 
    const oldDatabase = await githubGet(location)
 
-   if (typeof oldDatabase === 'string') {
-      return oldDatabase
-   }
-
    // if it's string then it is error message
    if (typeof oldDatabase === 'string') {
       sendMessage(oldDatabase, 'error')

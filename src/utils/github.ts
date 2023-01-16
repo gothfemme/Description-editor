@@ -26,7 +26,6 @@ export async function githubGet(location: keyof typeof apiUrlsV2): Promise<Githu
    if (login === null) {
       return 'Login details missing'
    }
-   debugger
 
    const resp = await persistentFetch(url, 5, {
       method: 'GET',
@@ -44,7 +43,7 @@ export async function githubGet(location: keyof typeof apiUrlsV2): Promise<Githu
    const respJson: GithubJsonResponse = resp
 
    // if content is empty it means file is over 1MB in size and it has to be downloaded as raw
-   if (!respJson.content) {
+   if (respJson.content.trim() === '') {
       const rawResp = await persistentFetch(url, 5, {
          method: 'GET',
          mode: 'cors',
