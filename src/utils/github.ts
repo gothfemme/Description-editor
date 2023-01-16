@@ -36,8 +36,8 @@ export async function githubGet(location: keyof typeof apiUrlsV2): Promise<Githu
       }
    })
 
-   if (resp === Error) {
-      return resp.message
+   if (resp.error) {
+      return resp.error.message
    }
 
    const respJson: GithubJsonResponse = resp
@@ -53,8 +53,8 @@ export async function githubGet(location: keyof typeof apiUrlsV2): Promise<Githu
          }
       })
 
-      if (resp === Error) {
-         return resp.message
+      if (rawResp.error) {
+         return rawResp.error.message
       }
 
       return {
@@ -91,8 +91,8 @@ export async function githubPut(location: keyof typeof apiUrlsV2, data: DataToSe
       })
    })
 
-   if (resp === Error) {
-      return resp.message
+   if (resp.error) {
+      return resp.error.message
    }
    return true
 }
