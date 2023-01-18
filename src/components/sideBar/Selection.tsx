@@ -1,6 +1,7 @@
 import { changePerkType, changeSelectedPerk } from 'src/redux/globalSlice'
 import { useAppDispatch, useAppSelector } from 'src/redux/hooks'
 import { useEffect, useState } from 'react'
+
 import { PerkTypes } from '@icemourne/description-converter'
 import { Select } from '../universal/Select'
 import { cnc } from 'src/utils/classNameCombiner'
@@ -113,29 +114,34 @@ export function PerkSelection() {
             }}
             value={settings.currentlySelected}
          >
-            {displayedPerkList.map((perkHash, i) => {
-               if (database[perkHash] === undefined) return
-               return (
-                  <option
-                     key={i}
-                     value={perkHash}
-                     className={cnc(database[perkHash].hidden && !settings.displayHiddenPerks, styles.hidden)}
-                  >
-                     {database[perkHash].itemName || database[perkHash].name}
-                     {Number(perkHash) > 10 && (
-                        <>
-                           {database[perkHash].inLiveDatabase ? '' : `❌`}
-                           {database[perkHash].hidden ? ' 😴' : ''}
-                           {settings.language !== 'en' &&
-                           database[perkHash].updateTracker.descriptions[settings.language]?.lastUpdate! <
-                              database[perkHash].updateTracker.descriptions.en?.lastUpdate!
-                              ? ' ⏳'
-                              : ''}
-                        </>
-                     )}
-                  </option>
-               )
-            })}
+            <optgroup label="Folders">
+               <option value="">something</option>
+            </optgroup>
+            <optgroup label="Perks">
+               {displayedPerkList.map((perkHash, i) => {
+                  if (database[perkHash] === undefined) return
+                  return (
+                     <option
+                        key={i}
+                        value={perkHash}
+                        className={cnc(database[perkHash].hidden && !settings.displayHiddenPerks, styles.hidden)}
+                     >
+                        {database[perkHash].itemName || database[perkHash].name}
+                        {Number(perkHash) > 10 && (
+                           <>
+                              {database[perkHash].inLiveDatabase ? '' : `❌`}
+                              {database[perkHash].hidden ? ' 😴' : ''}
+                              {settings.language !== 'en' &&
+                              database[perkHash].updateTracker.descriptions[settings.language]?.lastUpdate! <
+                                 database[perkHash].updateTracker.descriptions.en?.lastUpdate!
+                                 ? ' ⏳'
+                                 : ''}
+                           </>
+                        )}
+                     </option>
+                  )
+               })}
+            </optgroup>
          </Select>
       </>
    )

@@ -1,4 +1,6 @@
-import { Stat, StatNames, Stats, WeaponTypes } from '@icemourne/description-converter'
+import { Stat, StatNames, Stats, WeaponTypes, weaponTypes } from '@icemourne/description-converter'
+
+import { TypedObject } from '@icemourne/tool-box'
 
 export function statsStringToArray(str: string): number[] {
    const statsArr = str.split(',')
@@ -18,7 +20,10 @@ export type StringStat = {
       stat: string
       multiplier: string
    }
-   weaponTypes: WeaponTypes[]
+   /**
+    * [weaponType, isUsed]
+    */
+   weaponTypes: [WeaponTypes, boolean][]
 }
 
 export type StringStats = {
@@ -27,7 +32,14 @@ export type StringStats = {
 
 export function statsToString(stats: Stats = {}) {
    return Object.entries(stats).reduce((acc, [key, stat]: [string, Stat[]]) => {
+      const weaponTypesState = weaponTypes.map((weaponType) => [weaponType, false]) as [WeaponTypes, boolean][]
+
       acc[key as StatNames] = stat.map((value) => {
+         value?.weaponTypes?.forEach((weaponType) => {
+            const index = weaponTypesState.findIndex(([type]) => type === weaponType)
+            weaponTypesState[index][1] = true
+         })
+
          return {
             passive: {
                stat: value?.passive?.stat?.join(', ') || '',
@@ -37,7 +49,7 @@ export function statsToString(stats: Stats = {}) {
                stat: value?.active?.stat?.join(', ') || '',
                multiplier: value?.active?.multiplier?.join(', ') || ''
             },
-            weaponTypes: value?.weaponTypes || []
+            weaponTypes: weaponTypesState
          }
       })
       return acc

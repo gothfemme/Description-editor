@@ -52,14 +52,9 @@ const StatComponent = ({
    const weaponTypesComponent = (stat: StringStat) => {
       if (!stat?.weaponTypes) return null
 
-      const selectedWeaponTypes = weaponTypes.map((weaponType): [WeaponTypes, boolean] => {
-         if (stat.weaponTypes?.includes(weaponType)) return [weaponType, true]
-         return [weaponType, false]
-      })
-
       return (
          <div className={styles.weaponTypes}>
-            {selectedWeaponTypes.map(
+            {stat.weaponTypes.map(
                ([weaponType, selected], i, arr) =>
                   (editMode || selected) && (
                      <span key={i}>{`${_.upperFirst(weaponType)}${','}`}</span>
